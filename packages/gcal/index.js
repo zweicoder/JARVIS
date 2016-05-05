@@ -35,7 +35,6 @@ function authorizeGcal(electron) {
       const auth = new GoogleAuth();
       const oauth2Client = new auth.OAuth2(client_id, client_secret, redirect_uris[0]);
       getToken(oauth2Client, electron).then(token => {
-        console.log('Obtained token: ', token);
         oauth2Client.credentials = token;
         resolve(oauth2Client)
       });
