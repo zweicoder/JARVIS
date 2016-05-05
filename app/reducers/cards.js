@@ -1,4 +1,4 @@
-import { ADD_TO_RENDER } from '../actions/intent';
+import { ADD_TO_RENDER } from "../actions/intent";
 
 export default function cards(state = [], action) {
   switch (action.type) {

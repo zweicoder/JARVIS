@@ -7,8 +7,7 @@ const constants = {
 }
 
 // TODO import from somewhere
-const secret = {
-}
+const secret = {}
 
 const settings = {}
 const env = Object.assign({}, secret, constants)

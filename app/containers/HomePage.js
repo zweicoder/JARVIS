@@ -1,9 +1,8 @@
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import Home from '../components/Home';
-import React, { Component }  from 'react';
-import * as IntentActions from '../actions/intent';
-import wit from '../api/wit';
+import { connect } from "react-redux";
+import Home from "../components/Home";
+import React, { Component } from "react";
+import * as IntentActions from "../actions/intent";
+import wit from "../api/wit";
 
 
 class HomePage extends Component {
@@ -13,6 +12,7 @@ class HomePage extends Component {
   };
 
   checkEnter(e) {
+    const { resolveIntent } = this.props;
     if (e.key == 'Enter') {
       const val = e.target.value.trim();
       if (val) {
@@ -26,11 +26,12 @@ class HomePage extends Component {
 
             // Dispatch according to intent
             // this.props.dispatch(IntentActions.resolveCounterIntent)
-            this.props.dispatch(intentActionMap[intent]())
+            resolveIntent(intent)
           })
           .catch(e => {
             console.log(e);
-          })
+          });
+
         e.target.value = ''
       }
     }
@@ -59,7 +60,7 @@ const intentActionMap = {
 };
 
 function mapDispatchToProps(dispatch) {
-  return { getAction: (intent) => dispatch(intentActionMap[intent]) }
+  return { resolveIntent: (intent) => dispatch(intentActionMap[intent]) }
 }
 
-export default connect(mapStateToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

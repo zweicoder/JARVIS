@@ -1,6 +1,6 @@
-import env from '../env';
-import * as intents from '../actions/intent';
-import nodeWit from 'node-wit';
+import env from "../env";
+import * as intents from "../actions/intent";
+import nodeWit from "node-wit";
 
 const session = '123abc'; // maybe use hash from node-uuid
 const token = env.WIT_ACCESS_TOKEN;
