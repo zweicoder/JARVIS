@@ -12,27 +12,36 @@ const PACKAGE_PATH = path.resolve('./packages/gcal');
 const TOKEN_PATH = path.resolve(PACKAGE_PATH, './token.json');
 const SECRET_PATH = path.resolve(PACKAGE_PATH, './client_secret.json');
 
+/**
+ * Authorizes application for Google Calendar via OAuth 2.0
+ * @param electron - electron library to open browser window for OAuth flow
+ * @returns {Promise} - Promises the Google oauthclient that can be used with googleapis
+ */
 export default
 function authorizeGcal(electron) {
   // Load client secrets from a local file.
   // Okay to have the secret in public according to docs.
   // See https://developers.google.com/identity/protocols/OAuth2InstalledApp#overview
-  fs.readFile(SECRET_PATH, function processClientSecrets(err, content) {
-    if (err) {
-      console.log('Error loading client secret file: ' + err);
-      return;
-    }
-    // Authorize a client with the loaded credentials, then call the
-    // Google Calendar API.
-    const credentials = JSON.parse(content);
-    const { client_secret, client_id, redirect_uris } = credentials.installed;
-    const auth = new GoogleAuth();
-    const oauth2Client = new auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-    getToken(oauth2Client, electron).then(token => {
-      console.log('Got token: ', token);
-      oauth2Client.credentials = token;
+  return new Promise(resolve => {
+    fs.readFile(SECRET_PATH, function processClientSecrets(err, content) {
+      if (err) {
+        console.log('Error loading client secret file: ' + err);
+        return;
+      }
+      // Authorize a client with the loaded credentials, then call the
+      // Google Calendar API.
+      const credentials = JSON.parse(content);
+      const { client_secret, client_id, redirect_uris } = credentials.installed;
+      const auth = new GoogleAuth();
+      const oauth2Client = new auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+      getToken(oauth2Client, electron).then(token => {
+        console.log('Obtained token: ', token);
+        oauth2Client.credentials = token;
+        resolve(oauth2Client)
+      });
     });
   });
+
 };
 
 function getToken(oauth2Client, electron) {
