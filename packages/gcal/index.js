@@ -48,7 +48,8 @@ function getToken(oauth2Client, electron) {
   return new Promise(resolve => {
     // Find existing token
     fs.readFile(TOKEN_PATH, function (err, token) {
-      if (err) {
+      if (!err) {
+        // File exists, return token
         return resolve(JSON.parse(token));
       }
 
