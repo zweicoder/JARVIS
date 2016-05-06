@@ -17,14 +17,14 @@ const SECRET_PATH = path.resolve(PACKAGE_PATH, './client_secret.json');
  * @param electron - electron library to open browser window for OAuth flow
  * @returns {Promise} - Promises the Google oauthclient that can be used with googleapis
  */
-function authorizeGcal(electron) {
+export default function authorizeGcal(electron) {
   // Load client secrets from a local file.
   // Okay to have the secret in public according to docs.
   // See https://developers.google.com/identity/protocols/OAuth2InstalledApp#overview
-  return new Promise(resolve => {
+  return new Promise((resolve, reject)=> {
     fs.readFile(SECRET_PATH, function processClientSecrets(err, content) {
       if (err) {
-        console.log('Error loading client secret file: ' + err);
+        reject('Error loading client secret file: ' + err);
         return;
       }
       // Authorize a client with the loaded credentials, then call the
@@ -33,42 +33,60 @@ function authorizeGcal(electron) {
       const { client_secret, client_id, redirect_uris } = credentials.installed;
       const auth = new GoogleAuth();
       const oauth2Client = new auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-      getToken(oauth2Client, electron).then(token => {
-        oauth2Client.credentials = token;
-        resolve(oauth2Client)
-      });
+      getToken(oauth2Client, electron)
+        .then(token => {
+          if (!token) {
+            // Something happened while requesting, or maybe user denied access
+            console.error('Unable to get token');
+            return;
+          }
+          oauth2Client.credentials = token;
+          resolve(oauth2Client)
+        });
     });
   });
 
 };
 
 function getToken(oauth2Client, electron) {
-  return new Promise(resolve => {
-    // Find existing token
-    fs.readFile(TOKEN_PATH, function (err, token) {
-      if (!err) {
-        // File exists, return token
-        return resolve(JSON.parse(token));
+  return getExistingToken()
+    .then(token => {
+      if (!token) {
+        return requestToken(oauth2Client, electron)
       }
-
-      var authUrl = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: SCOPES
-      });
-      receiveOAuthCode(electron, authUrl)
-        .then(code => receiveOAuthToken(code, oauth2Client))
-        .then(token => resolve(token));
+      return token;
     });
+}
+
+function getExistingToken() {
+  return new Promise(resolve => {
+    fs.readFile(TOKEN_PATH, function (err, token) {
+      if (err) {
+        return resolve(null);
+      }
+      // File exists, return token
+      return resolve(JSON.parse(token));
+    })
   })
 }
 
-function receiveOAuthToken(code, oauth2Client) {
+function requestToken(oauth2Client, electron) {
+  var authUrl = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES
+  });
+
+  return receiveOAuthCode(electron, authUrl)
+    .then(code => receiveOAuthToken(oauth2Client, code))
+}
+
+function receiveOAuthToken(oauth2Client, code) {
   return new Promise((resolve)=> {
     oauth2Client.getToken(code, (err, token) => {
       // Now tokens contains an access_token and an optional refresh_token. Save them.
       if (err) {
         console.error(err);
-        resolve(null)
+        return resolve(null)
       }
       storeToken(token);
       resolve(token);
@@ -86,7 +104,6 @@ function receiveOAuthCode(electron, authUrl) {
   return new Promise(resolve => {
     win.webContents.on('will-navigate', function (e, targetUrl) {
       e.preventDefault();
-      console.log(`Navigating to ${targetUrl}`);
       const qs = querystring.parse(url.parse(targetUrl).query);
       if (qs.code) {
         win.close();
