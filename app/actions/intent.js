@@ -1,8 +1,6 @@
-export const INTENT_COUNTER = 'intent_counter';
-export const INTENT_ALARM = 'intent_alarm';
-export const INTENT_REMINDER = 'intent_reminder';
+import { INTENT_COUNTER } from "../api/intents";
 
-export const ADD_TO_RENDER = 'add_to_render'
+export const ADD_TO_RENDER = 'add_to_render';
 export function addToRender(intent) {
   return {
     type: ADD_TO_RENDER,

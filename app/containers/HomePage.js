@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import Home from "../components/Home";
 import React, { Component } from "react";
-import * as IntentActions from "../actions/intent";
+import * as intents from "../api/intents";
 import wit from "../api/wit";
 
 
@@ -50,17 +50,9 @@ function mapStateToProps(state) {
   };
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(IntentActions, dispatch);
-// }
-
-// TODO this map should be generated somewhere, along with intent to component map
-const intentActionMap = {
-  [IntentActions.INTENT_COUNTER]: IntentActions.resolveCounterIntent()
-};
 
 function mapDispatchToProps(dispatch) {
-  return { resolveIntent: (intent) => dispatch(intentActionMap[intent]) }
+  return { resolveIntent: (intent) => dispatch(intents.intentActionMap[intent]) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

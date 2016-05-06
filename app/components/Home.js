@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from "react";
 import styles from "./Home.css";
 import electron from "electron";
 import authorizeGcal from '../../packages/gcal/index';
-// import auth from '../api/google-auth2';
 
 export default class Home extends Component {
   static propTypes:{
@@ -21,7 +20,7 @@ export default class Home extends Component {
   render() {
     const { cards, onInputKeyUp } = this.props;
     const cardComponents = cards.map(card => {
-      // TODO get component
+      // TODO get component by the intent
       return <div> TEST COMPONENT</div>
     });
 
