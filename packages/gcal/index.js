@@ -1,7 +1,8 @@
-import fs from "fs";
-import path from "path";
-import querystring from "querystring";
-import url from "url";
+import fs from 'fs';
+import path from 'path';
+import querystring from 'querystring';
+import url from 'url';
+import wit from './api/wit';
 // Require externals
 var google = require('googleapis');
 var GoogleAuth = require('google-auth-library');
@@ -17,7 +18,6 @@ const SECRET_PATH = path.resolve(PACKAGE_PATH, './client_secret.json');
  * @param electron - electron library to open browser window for OAuth flow
  * @returns {Promise} - Promises the Google oauthclient that can be used with googleapis
  */
-export default
 function authorizeGcal(electron) {
   // Load client secrets from a local file.
   // Okay to have the secret in public according to docs.
@@ -145,4 +145,17 @@ function listEvents(auth) {
       }
     }
   });
+}
+
+
+export default function parseMessage(app, message) {
+  wit.parse(message)
+    .then(intent =>{
+      performActionBasedOn(intent) //e.g. add to calendar or list events
+    })
+    .then(component =>{
+      // ID and props: {id: componentId, props: {}}
+      app.addToRender(component)
+    })
+
 }
