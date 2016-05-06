@@ -5,6 +5,7 @@ import url from "url";
 // Require externals
 var google = require('googleapis');
 var GoogleAuth = require('google-auth-library');
+const calendar = google.calendar('v3');
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 // Not sure why __dirname doesn't work here
@@ -161,4 +162,15 @@ function listEvents(auth) {
       }
     }
   });
+}
+
+export function addEvent(name) {
+  calendar.events.insert({
+    resource:{
+      start:{},
+      end: {}
+    },
+    calendarId: 'primary',
+    sendNotifications: true
+  })
 }
