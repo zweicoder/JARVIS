@@ -1,5 +1,5 @@
 import Main from './components/card';
-import parseMessage from './index';
+import parseMessage from './parser';
 import env from './env';
 
 
@@ -13,4 +13,3 @@ export const intentActionMap = {
   'intent_reminder': parseMessage
 };
 
-// Pass in wrapped app interface with electron + dispatch method?
