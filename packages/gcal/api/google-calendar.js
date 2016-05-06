@@ -1,8 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-import querystring from 'querystring';
-import url from 'url';
-import wit from './api/wit';
+import fs from "fs";
+import path from "path";
+import querystring from "querystring";
+import url from "url";
 // Require externals
 var google = require('googleapis');
 var GoogleAuth = require('google-auth-library');
@@ -145,17 +144,4 @@ function listEvents(auth) {
       }
     }
   });
-}
-
-
-export default function parseMessage(app, message) {
-  wit.parse(message)
-    .then(intent =>{
-      performActionBasedOn(intent) //e.g. add to calendar or list events
-    })
-    .then(component =>{
-      // ID and props: {id: componentId, props: {}}
-      app.addToRender(component)
-    })
-
 }
