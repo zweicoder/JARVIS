@@ -9,6 +9,7 @@ As of now [Wit.ai](https://wit.ai/) is being used as the NLP module for each ser
 
 # What it can do
 - [x] Add stuff to google calendar
+- [ ] Optionally display custom views for the integrations (or maybe a chatbot like experience)
 - [ ] Call an Uber
 - [ ] Order pizza
 - [ ] Set alarm on phone
