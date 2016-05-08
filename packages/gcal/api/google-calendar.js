@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import querystring from "querystring";
 import url from "url";
+import moment from 'moment';
 // Require externals
 var google = require('googleapis');
 var GoogleAuth = require('google-auth-library');
@@ -114,7 +115,6 @@ function receiveOAuthCode(electron, authUrl) {
         console.error('Error trying to get OAuth code for user')
       }
     });
-    // TODO parse token and store it
     win.loadURL(authUrl);
   });
 
@@ -164,13 +164,25 @@ function listEvents(auth) {
   });
 }
 
-export function addEvent(name) {
+export function addEvent(event, start, end) {
+  // default 1 hour, otherwise ask user to select?? (maybe not...)
+  // popup notifications? time before notif???
+  // moment().format("YYYY-MM-DDTHH:mm:ssZ")
+  // date vs datetime for full day events or not
+
+  const startDateTime = moment(start,'Hma');
+  const endDateTime = moment(start.add(1,'hours'));
+
   calendar.events.insert({
-    resource:{
-      start:{},
-      end: {}
+    resource: {
+      start: startDateTime,
+      end: endDateTime
     },
     calendarId: 'primary',
-    sendNotifications: true
+    summary: event,
+    sendNotifications: true,
+    reminders: {
+      useDefault: true
+    }
   })
 }

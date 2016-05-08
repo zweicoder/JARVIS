@@ -99,6 +99,7 @@
     "font-awesome": "^4.6.1",
     "google-auth-library": "^0.9.7",
     "googleapis": "^5.2.1",
+    "moment": "^2.13.0",
     "node-wit": "^3.2.2",
     "postcss": "^5.0.19",
     "react": "^15.0.1",
