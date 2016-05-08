@@ -8,11 +8,11 @@ JARVIS is made with a core AI and other modular services each with their own AI,
 As of now [Wit.ai](https://wit.ai/) is being used as the NLP module for each service to parse the input plaintext into intents and entities. Unfortunately making two round trips to Wit.ai instances in addition to the processing time in Wit.ai proves to take quite a while. 
 
 # What it can do
-[x] Add stuff to google calendar
-[] Call an Uber
-[] Order pizza
-[] Set alarm on phone
-[] Anything
+- [x] Add stuff to google calendar
+- [ ] Call an Uber
+- [ ] Order pizza
+- [ ] Set alarm on phone
+- [ ] Anything
 
 # Usage
 `npm start`
