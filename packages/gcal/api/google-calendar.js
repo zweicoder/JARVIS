@@ -170,13 +170,13 @@ export function addEvent(event, start, end) {
   // moment().format("YYYY-MM-DDTHH:mm:ssZ")
   // date vs datetime for full day events or not
 
-  const startDateTime = moment(start,'Hma');
+  const startDateTime = moment(start);
   const endDateTime = moment(start.add(1,'hours'));
 
   calendar.events.insert({
     resource: {
-      start: startDateTime,
-      end: endDateTime
+      start: startDateTime.toISOString(),
+      end: endDateTime.toISOString()
     },
     calendarId: 'primary',
     summary: event,
